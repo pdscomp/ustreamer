@@ -46,7 +46,41 @@
 #	define US_THREAD_NAME_SIZE ((uz)16)
 #endif
 
-#define US_THREAD_CREATE(x_tid, x_func, x_arg)	US_A(!pthread_create(&(x_tid), NULL, (x_func), (x_arg)))
+#ifndef US_THREAD_STACK_SIZE
+#	define US_THREAD_STACK_SIZE (512 * 1024UL)
+#endif
+
+INLINE int us_thread_create(pthread_t *tid, void *(*func)(void*), void *arg) {
+#if (US_THREAD_STACK_SIZE > 0)
+	pthread_attr_t attr;
+	US_A(!pthread_attr_init(&attr));
+
+	// These threads are long-lived but have shallow call stacks, so cap the
+	// default pthread stack reservation to keep memory overhead predictable.
+	uz stack_size = US_THREAD_STACK_SIZE;
+	const uz min_stack_size = (uz)PTHREAD_STACK_MIN;
+	if (stack_size < min_stack_size) {
+		stack_size = min_stack_size;
+	}
+#	if defined(_SC_PAGESIZE)
+	{
+		const long page_size = sysconf(_SC_PAGESIZE);
+		if (page_size > 0 && (stack_size % (uz)page_size) != 0) {
+			stack_size += (uz)page_size - (stack_size % (uz)page_size);
+		}
+	}
+#	endif
+	US_A(!pthread_attr_setstacksize(&attr, stack_size));
+
+	const int retval = pthread_create(tid, &attr, func, arg);
+	US_A(!pthread_attr_destroy(&attr));
+	return retval;
+#else
+	return pthread_create(tid, NULL, func, arg);
+#endif
+}
+
+#define US_THREAD_CREATE(x_tid, x_func, x_arg)	US_A(!us_thread_create(&(x_tid), (x_func), (x_arg)))
 #define US_THREAD_JOIN(x_tid)					US_A(!pthread_join((x_tid), NULL))
 
 #ifdef WITH_PTHREAD_NP
