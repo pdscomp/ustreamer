@@ -58,6 +58,11 @@
 #endif
 
 
+#ifndef US_HTTP_JPEG_RING_SIZE
+#	define US_HTTP_JPEG_RING_SIZE 2
+#endif
+
+
 typedef struct {
 	pthread_t		tid;
 	us_capture_s	*cap;
@@ -104,7 +109,9 @@ us_stream_s *us_stream_init(us_capture_s *cap, us_encoder_s *enc) {
 	http->drm_fpsi = us_fpsi_init("DRM", true);
 #	endif
 	http->h264_fpsi = us_fpsi_init("H264", true);
-	US_RING_INIT_WITH_ITEMS(http->jpeg_ring, 4, us_frame_init);
+	// Keep a minimal HTTP JPEG backlog: the refresher copies the newest frame
+	// into the stable exposed buffer, so extra slots mostly retain stale copies.
+	US_RING_INIT_WITH_ITEMS(http->jpeg_ring, US_HTTP_JPEG_RING_SIZE, us_frame_init);
 	atomic_init(&http->has_clients, false);
 	atomic_init(&http->snapshot_requested, 0);
 	atomic_init(&http->last_req_ts, 0);

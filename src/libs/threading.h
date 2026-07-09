@@ -47,7 +47,7 @@
 #endif
 
 #ifndef US_THREAD_STACK_SIZE
-#	define US_THREAD_STACK_SIZE (512 * 1024UL)
+#	define US_THREAD_STACK_SIZE (256 * 1024UL)
 #endif
 
 INLINE int us_thread_create(pthread_t *tid, void *(*func)(void*), void *arg) {
