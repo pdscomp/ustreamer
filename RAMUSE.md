@@ -18,6 +18,7 @@ Notes:
 
 | Git commit | Change | Total | Details |
 | --- | --- | --- | --- |
+| `6941db5` | Release blank RGB canvas after encoding | `7.37598 MB` | `Pss: 3.11816 MB`, `Rss: 4.25781 MB` |
 | `be84c43` | Cap internal thread stack size | `10.319 MB` | grep total |
 | `dc5c80d` | Trim uStreamer memory overhead | `9.946 MB` | grep total |
 | `4ef9593` | Reduce uStreamer frame backlog | `9.946 MB` | grep total |
