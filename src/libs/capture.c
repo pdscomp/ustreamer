@@ -94,6 +94,7 @@ static int _capture_open_dv_timings(us_capture_s *cap, bool apply);
 static int _capture_open_format(us_capture_s *cap, bool first);
 static void _capture_open_hw_fps(us_capture_s *cap);
 static void _capture_open_jpeg_quality(us_capture_s *cap);
+static uz _capture_get_userptr_buffer_size(const us_capture_runtime_s *run);
 static int _capture_open_io_method(us_capture_s *cap);
 static int _capture_open_io_method_mmap(us_capture_s *cap);
 static int _capture_open_io_method_userptr(us_capture_s *cap);
@@ -1009,7 +1010,7 @@ static int _capture_open_io_method_userptr(us_capture_s *cap) {
 	US_CALLOC(run->bufs, req.count);
 
 	const uint page_size = getpagesize();
-	const uint buf_size = us_align_size(run->raw_size, page_size);
+	const uint buf_size = _capture_get_userptr_buffer_size(run);
 
 	for (run->n_bufs = 0; run->n_bufs < req.count; ++run->n_bufs) {
 		us_capture_hwbuf_s *hw = &run->bufs[run->n_bufs];
@@ -1020,6 +1021,15 @@ static int _capture_open_io_method_userptr(us_capture_s *cap) {
 		}
 	}
 	return 0;
+}
+
+static uz _capture_get_userptr_buffer_size(const us_capture_runtime_s *run) {
+	// The driver-reported sizeimage is much larger than the actual MJPEG payload
+	// we observe on this target. Cap USERPTR to keep the resident capture buffer
+	// small while still leaving a conservative safety margin.
+	const uz raw_size = run->raw_size;
+	const uz cap_size = 256 * 1024UL;
+	return us_align_size(US_MIN(raw_size, cap_size), getpagesize());
 }
 
 static int _capture_open_queue_buffers(us_capture_s *cap) {
