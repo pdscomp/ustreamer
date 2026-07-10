@@ -59,7 +59,7 @@
 
 
 #ifndef US_HTTP_JPEG_RING_SIZE
-#	define US_HTTP_JPEG_RING_SIZE 2
+#	define US_HTTP_JPEG_RING_SIZE 1
 #endif
 
 
