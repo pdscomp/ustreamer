@@ -35,7 +35,9 @@
 us_frame_s *us_frame_init(void) {
 	us_frame_s *frame;
 	US_CALLOC(frame, 1);
-	us_frame_realloc_data(frame, 32 * 1024);
+	// Most live JPEG buffers settle well below 32 KiB in this deployment,
+	// so keep the startup floor small and grow only when needed.
+	us_frame_realloc_data(frame, 8 * 1024);
 	frame->dma_fd = -1;
 	return frame;
 }

@@ -107,5 +107,5 @@ bool us_queue_is_empty(us_queue_s *q) {
 	US_MUTEX_LOCK(q->mutex);
 	const uint size = q->size;
 	US_MUTEX_UNLOCK(q->mutex);
-	return (bool)(q->capacity - size);
+	return (size == 0);
 }
