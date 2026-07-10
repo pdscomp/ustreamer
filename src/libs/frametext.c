@@ -92,6 +92,7 @@ void us_frametext_draw(us_frametext_s *ft, const char *text, uint width, uint he
 	if (
 		frame->width == width && frame->height == height
 		&& ft->text != NULL && !strcmp(ft->text, text)
+		&& frame->data != NULL && frame->used > 0
 	) {
 		return;
 	}
