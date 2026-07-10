@@ -14,11 +14,12 @@ Notes:
 - The values below are what I observed on `root@10.10.10.141`.
 - The simple `grep -E 'Pss:|Rss:'` command also matches `SwapPss:` lines, so I am recording the output exactly as it printed.
 - For the latest run, I used `/proc/<pid>/smaps_rollup` with exact `Pss:` and `Rss:` matching so the result is comparable.
+- `Total` means `Pss + Rss` for the `smaps_rollup` entries, and the earlier grep-based logs were already total combined numbers.
 
-| Git commit | Change | RAM |
-| --- | --- | --- |
-| `be84c43` | Cap internal thread stack size | `10.319 MB` |
-| `dc5c80d` | Trim uStreamer memory overhead | `9.946 MB` |
-| `4ef9593` | Reduce uStreamer frame backlog | `9.946 MB` |
-| `64f7fd6` | Lower uStreamer thread stack cap | `SwapPss: 9.44434 MB` |
-| `2db118c` | Trim remaining frame overhead | `Pss: 4.15527 MB / Rss: 5.29688 MB` |
+| Git commit | Change | Total | Details |
+| --- | --- | --- | --- |
+| `be84c43` | Cap internal thread stack size | `10.319 MB` | grep total |
+| `dc5c80d` | Trim uStreamer memory overhead | `9.946 MB` | grep total |
+| `4ef9593` | Reduce uStreamer frame backlog | `9.946 MB` | grep total |
+| `64f7fd6` | Lower uStreamer thread stack cap | `9.44434 MB` | grep total; label printed as `SwapPss` |
+| `2db118c` | Trim remaining frame overhead | `9.45215 MB` | `Pss: 4.15527 MB`, `Rss: 5.29688 MB` |
