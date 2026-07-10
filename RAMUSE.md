@@ -18,6 +18,7 @@ Notes:
 
 | Git commit | Change | Total | Details |
 | --- | --- | --- | --- |
+| `2be4fad` | Cap USERPTR capture buffers at observed MJPEG size | `3.74414 MB` | `Pss: 1.30664 MB`, `Rss: 2.43750 MB` |
 | `6941db5` | Release blank RGB canvas after encoding | `7.37598 MB` | `Pss: 3.11816 MB`, `Rss: 4.25781 MB` |
 | `be84c43` | Cap internal thread stack size | `10.319 MB` | grep total |
 | `dc5c80d` | Trim uStreamer memory overhead | `9.946 MB` | grep total |
