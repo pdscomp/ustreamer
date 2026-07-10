@@ -144,7 +144,7 @@ us_capture_s *us_capture_init(void) {
 	cap->format = V4L2_PIX_FMT_YUYV;
 	cap->jpeg_quality = 80;
 	cap->standard = V4L2_STD_UNKNOWN;
-	cap->io_method = V4L2_MEMORY_MMAP;
+	cap->io_method = V4L2_MEMORY_USERPTR;
 	cap->n_bufs = us_get_cores_available() + 1;
 	cap->min_frame_size = 128;
 	cap->timeout = 1;
@@ -1014,7 +1014,6 @@ static int _capture_open_io_method_userptr(us_capture_s *cap) {
 	for (run->n_bufs = 0; run->n_bufs < req.count; ++run->n_bufs) {
 		us_capture_hwbuf_s *hw = &run->bufs[run->n_bufs];
 		US_A((hw->raw.data = aligned_alloc(page_size, buf_size)) != NULL);
-		memset(hw->raw.data, 0, buf_size);
 		hw->raw.allocated = buf_size;
 		if (run->capture_mplane) {
 			US_CALLOC(hw->buf.m.planes, VIDEO_MAX_PLANES);
