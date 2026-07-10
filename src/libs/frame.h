@@ -49,6 +49,7 @@ typedef struct {
 	uz		used;
 	uz		allocated;
 	int		dma_fd;
+	bool	external_data;
 
 	US_FRAME_META_DECLARE;
 } us_frame_s;
@@ -102,6 +103,7 @@ us_frame_s *us_frame_init(void);
 void us_frame_destroy(us_frame_s *frame);
 
 void us_frame_realloc_data(us_frame_s *frame, uz size);
+void us_frame_set_external_data(us_frame_s *frame, const u8 *data, uz size);
 void us_frame_set_data(us_frame_s *frame, const u8 *data, uz size);
 void us_frame_append_data(us_frame_s *frame, const u8 *data, uz size);
 

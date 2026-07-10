@@ -69,7 +69,9 @@ void _copy_plus_huffman(const us_frame_s *src, us_frame_s *dest) {
 		us_frame_append_data(dest, src_ptr, src->used - paste);
 
 	} else {
-		us_frame_set_data(dest, src->data, src->used);
+		// Borrow the camera JPEG buffer directly when it is already complete.
+		// The caller keeps the capture buffer alive until after exposure.
+		us_frame_set_external_data(dest, src->data, src->used);
 	}
 
 	us_frame_encoding_end(dest);

@@ -43,21 +43,45 @@ us_frame_s *us_frame_init(void) {
 }
 
 void us_frame_destroy(us_frame_s *frame) {
-	US_DELETE(frame->data, free);
+	if (!frame->external_data) {
+		US_DELETE(frame->data, free);
+	}
 	free(frame);
 }
 
 void us_frame_realloc_data(us_frame_s *frame, uz size) {
+	if (frame->external_data) {
+		u8 *owned;
+		US_CALLOC(owned, size);
+		if (frame->data != NULL && frame->used > 0) {
+			memcpy(owned, frame->data, frame->used);
+		}
+		frame->data = owned;
+		frame->external_data = false;
+		frame->allocated = size;
+		return;
+	}
 	if (frame->allocated < size) {
 		US_REALLOC(frame->data, size);
 		frame->allocated = size;
 	}
 }
 
+void us_frame_set_external_data(us_frame_s *frame, const u8 *data, uz size) {
+	if (!frame->external_data) {
+		US_DELETE(frame->data, free);
+	}
+	frame->data = (u8*)data;
+	frame->used = size;
+	frame->allocated = 0;
+	frame->external_data = true;
+}
+
 void us_frame_set_data(us_frame_s *frame, const u8 *data, uz size) {
 	us_frame_realloc_data(frame, size);
 	memcpy(frame->data, data, size);
 	frame->used = size;
+	frame->external_data = false;
 }
 
 void us_frame_append_data(us_frame_s *frame, const u8 *data, uz size) {

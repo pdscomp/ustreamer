@@ -338,8 +338,6 @@ static void *_jpeg_thread(void *v_ctx) {
 		us_encoder_job_s *const job = wr->job;
 
 		if (job->hw != NULL) {
-			us_capture_hwbuf_decref(job->hw);
-			job->hw = NULL;
 			if (wr->job_failed) {
 				// pass
 			} else if (wr->job_timely) {
@@ -352,6 +350,8 @@ static void *_jpeg_thread(void *v_ctx) {
 			} else {
 				US_LOG_PERF("JPEG: ----- Encoded JPEG dropped; worker=%s", wr->name);
 			}
+			us_capture_hwbuf_decref(job->hw);
+			job->hw = NULL;
 		}
 
 		us_capture_hwbuf_s *hw = _get_latest_hw(ctx->q);
