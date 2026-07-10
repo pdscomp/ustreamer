@@ -67,6 +67,20 @@ void us_frame_realloc_data(us_frame_s *frame, uz size) {
 	}
 }
 
+void us_frame_release_data(us_frame_s *frame) {
+	if (frame->external_data) {
+		frame->data = NULL;
+		frame->used = 0;
+		frame->allocated = 0;
+		frame->external_data = false;
+		return;
+	}
+
+	US_DELETE(frame->data, free);
+	frame->used = 0;
+	frame->allocated = 0;
+}
+
 void us_frame_set_external_data(us_frame_s *frame, const u8 *data, uz size) {
 	if (!frame->external_data) {
 		US_DELETE(frame->data, free);

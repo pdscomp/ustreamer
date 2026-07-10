@@ -43,6 +43,7 @@ us_blank_s *us_blank_init(void) {
 void us_blank_draw(us_blank_s *blank, const char *text, uint width, uint height) {
 	us_frametext_draw(blank->ft, text, width, height);
 	us_cpu_encoder_compress(blank->raw, blank->jpeg, 95);
+	us_frame_release_data(blank->raw);
 }
 
 void us_blank_destroy(us_blank_s *blank) {
