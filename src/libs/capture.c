@@ -95,6 +95,7 @@ static int _capture_open_format(us_capture_s *cap, bool first);
 static void _capture_open_hw_fps(us_capture_s *cap);
 static void _capture_open_jpeg_quality(us_capture_s *cap);
 static uz _capture_get_userptr_buffer_size(const us_capture_runtime_s *run);
+static int _capture_open_impl(us_capture_s *cap);
 static int _capture_open_io_method(us_capture_s *cap);
 static int _capture_open_io_method_mmap(us_capture_s *cap);
 static int _capture_open_io_method_userptr(us_capture_s *cap);
@@ -186,6 +187,27 @@ int us_capture_parse_io_method(const char *str) {
 }
 
 int us_capture_open(us_capture_s *cap) {
+	const enum v4l2_memory requested_io_method = cap->io_method;
+	int result = _capture_open_impl(cap);
+
+	if (result >= 0) {
+		return result;
+	}
+
+	if (requested_io_method != V4L2_MEMORY_USERPTR) {
+		return result;
+	}
+
+	_LOG_INFO("USERPTR capture failed, retrying with MMAP");
+	cap->io_method = V4L2_MEMORY_MMAP;
+	result = _capture_open_impl(cap);
+	if (result < 0) {
+		cap->io_method = requested_io_method;
+	}
+	return result;
+}
+
+static int _capture_open_impl(us_capture_s *cap) {
 	us_capture_runtime_s *const run = cap->run;
 
 	if (access(cap->path, R_OK | W_OK) < 0) {

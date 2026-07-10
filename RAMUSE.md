@@ -25,3 +25,5 @@ Notes:
 | `4ef9593` | Reduce uStreamer frame backlog | `9.946 MB` | grep total |
 | `64f7fd6` | Lower uStreamer thread stack cap | `9.44434 MB` | grep total; label printed as `SwapPss` |
 | `2db118c` | Trim remaining frame overhead | `9.45215 MB` | `Pss: 4.15527 MB`, `Rss: 5.29688 MB` |
+| `b1bd032` | Record USERPTR capture cap result | `3.75098 MB` | `/usr/bin/ustreamer` bind-mounted to `/user-resource/ustreamer`, `Pss: 1.30957 MB`, `Rss: 2.44141 MB` |
+| `b1bd032` | YUYV @ 864x480 with MMAP | `5.66309 MB` | `Pss: 2.25293 MB`, `Rss: 3.41016 MB`, snapshot payload `32499` bytes |

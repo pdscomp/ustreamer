@@ -703,7 +703,7 @@ static void _help(
 	SAY("                                           Available: %s; default: disabled.\n", US_STANDARDS_STR);
 	SAY("    -I|--io-method <method>  ───────────── Set V4L2 IO method (see kernel documentation).");
 	SAY("                                           Changing of this parameter may increase the performance. Or not.");
-	SAY("                                           Available: %s; default: USERPTR.\n", US_IO_METHODS_STR);
+	SAY("                                           Available: %s; default: USERPTR, with MMAP fallback if needed.\n", US_IO_METHODS_STR);
 	SAY("    -f|--desired-fps <N>  ──────────────── Desired FPS. Default: maximum possible.\n");
 	SAY("    -z|--min-frame-size <N>  ───────────── Drop frames smaller than this limit. Useful if the device");
 	SAY("                                           produces small-sized garbage frames. Default: %zu bytes.\n", cap->min_frame_size);
