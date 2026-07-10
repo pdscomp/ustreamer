@@ -13,6 +13,7 @@ Notes:
   - `/user-resource/ustreamer -r 864x480 -c HW -m MJPEG -b 1 -w 1 -f 10 -l --host=0.0.0.0 --allow-origin=*`
 - The values below are what I observed on `root@10.10.10.141`.
 - The simple `grep -E 'Pss:|Rss:'` command also matches `SwapPss:` lines, so I am recording the output exactly as it printed.
+- For the latest run, I used `/proc/<pid>/smaps_rollup` with exact `Pss:` and `Rss:` matching so the result is comparable.
 
 | Git commit | Change | RAM |
 | --- | --- | --- |
@@ -20,3 +21,4 @@ Notes:
 | `dc5c80d` | Trim uStreamer memory overhead | `9.946 MB` |
 | `4ef9593` | Reduce uStreamer frame backlog | `9.946 MB` |
 | `64f7fd6` | Lower uStreamer thread stack cap | `SwapPss: 9.44434 MB` |
+| `2db118c` | Trim remaining frame overhead | `Pss: 4.15527 MB / Rss: 5.29688 MB` |
